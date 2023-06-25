@@ -1,11 +1,20 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
 import { ILoginResponse } from './interfaces/user.interface';
 
 import { RegisterUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
 import { UserService } from './user.service';
 import { LoginUserDto } from './dto/login-user.dto';
+import { JwtAuthGuard } from './user.guard';
 
 @Controller('users')
 export class UserController {
@@ -22,5 +31,11 @@ export class UserController {
     const response = await this.userService.loginUser(dto);
 
     return response;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('/profile')
+  getProfile(@Request() req) {
+    return req.user;
   }
 }

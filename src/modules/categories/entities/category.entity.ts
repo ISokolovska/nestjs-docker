@@ -25,8 +25,15 @@ export class Category {
   userId: number;
 
   @OneToMany(() => Task, (task) => task.taskId)
-  tasks: Task[];
+  tasks: Task;
 
   @ManyToOne(() => User, (user) => user.id)
-  users: User[];
+  users: User;
+
+  //   @OneToMany(() => Task, (task) => task.taskId)
+  //   tasks: Task[];
+
+  //   @ManyToOne(() => User, (user) => user.id)
+  //   users: User[];
+  //
 }

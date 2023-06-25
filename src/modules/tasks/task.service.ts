@@ -1,17 +1,39 @@
-import { Injectable } from '@nestjs/common'
-import { Task } from './entities/task.entity'
-
-// import { v4 as uuidv4 } from 'uuid';
+import { Injectable } from '@nestjs/common';
+import { Task } from './entities/task.entity';
+import { CreateTaskDto } from './dto/create-task.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class TaskService {
-    private readonly tasks: Task[] = []
+  constructor(
+    @InjectRepository(Task)
+    private readonly categoryRepository: Repository<Task>,
+  ) {}
 
-  create(task: Task) {
-    this.tasks.push(task)
+  getAllTasks(): Promise<Task[]> {
+    return this.categoryRepository.find();
   }
 
-  getAllTasks(): Task[] {
-    return this.tasks
+  getTaskById(id: number): Promise<Task> {
+    return this.categoryRepository
+      .createQueryBuilder('category')
+      .where('category.id = :id', { id })
+      .getOne();
   }
+
+  addTask(dto: CreateTaskDto): Promise<Task> {
+    const category = this.categoryRepository.create(dto);
+    return this.categoryRepository.save(category);
+  }
+
+  // async removeCategory(id: number, userId: number): Promise<Category> {
+  //   await this.categoryRepository
+  //     .createQueryBuilder()
+  //     // .where('category.id = :id', { id })
+  //     // .getOne()
+  //     .relation(User, 'category')
+  //     .of(userId)
+  //     .remove(id);
+  // }
 }

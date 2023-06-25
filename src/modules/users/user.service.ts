@@ -8,7 +8,6 @@ import { LoginUserDto } from './dto/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
 import { ILoginResponse } from './interfaces/user.interface';
 import { ConfigService } from '@nestjs/config';
-// import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class UserService {
@@ -63,16 +62,4 @@ export class UserService {
 
     return { token };
   }
-
-  // async getAll() {
-  //   return await this.userRepository.find();
-  // }
-
-  // async getOne({ id }) {
-  //   return await this.userRepository.findOneBy({ id });
-  // }
-
-  // async removeUser({ id }): Promise<void> {
-  //   await this.userRepository.delete({ id });
-  // }
 }
