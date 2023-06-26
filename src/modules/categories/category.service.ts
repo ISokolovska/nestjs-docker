@@ -1,8 +1,4 @@
-import {
-  ImATeapotException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from './entities/category.entity';
@@ -16,7 +12,6 @@ export class CategoryService {
   ) {}
 
   async getAllCategories(userId: number): Promise<Category[]> {
-    // return this.categoryRepository.find();
     return await this.categoryRepository
       .createQueryBuilder('category')
       .where('category.userId = :userId', { userId })

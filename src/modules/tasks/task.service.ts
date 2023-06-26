@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Task } from './entities/task.entity';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -8,32 +8,42 @@ import { Repository } from 'typeorm';
 export class TaskService {
   constructor(
     @InjectRepository(Task)
-    private readonly categoryRepository: Repository<Task>,
+    private readonly taskRepository: Repository<Task>,
   ) {}
 
-  getAllTasks(): Promise<Task[]> {
-    return this.categoryRepository.find();
+  async getAllTasks(taskId: number): Promise<Task[]> {
+    return await this.taskRepository
+      .createQueryBuilder('task')
+      .where('task.taskId = :taskId', { taskId })
+      .getMany();
   }
 
-  getTaskById(id: number): Promise<Task> {
-    return this.categoryRepository
-      .createQueryBuilder('category')
-      .where('category.id = :id', { id })
+  async getTaskById(id: number): Promise<Task> {
+    return await this.taskRepository
+      .createQueryBuilder('task')
+      .where('task.id = :id', { id })
       .getOne();
   }
 
-  addTask(dto: CreateTaskDto): Promise<Task> {
-    const category = this.categoryRepository.create(dto);
-    return this.categoryRepository.save(category);
+  async addTask(dto: CreateTaskDto): Promise<Task> {
+    const category = this.taskRepository.create(dto);
+    return await this.taskRepository.save(category);
   }
 
-  // async removeCategory(id: number, userId: number): Promise<Category> {
-  //   await this.categoryRepository
-  //     .createQueryBuilder()
-  //     // .where('category.id = :id', { id })
-  //     // .getOne()
-  //     .relation(User, 'category')
-  //     .of(userId)
-  //     .remove(id);
-  // }
+  async removeTask(id: number): Promise<void> {
+    try {
+      const response = await this.taskRepository
+        .createQueryBuilder('task')
+        .delete()
+        .where({
+          id,
+        })
+        .execute();
+
+      if (!response.affected) throw new NotFoundException();
+    } catch (error) {
+      console.log(error);
+      throw new NotFoundException(`Task with id ${id} doesn't exist`);
+    }
+  }
 }

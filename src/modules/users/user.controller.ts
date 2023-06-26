@@ -2,8 +2,6 @@ import {
   Body,
   Controller,
   Get,
-  HttpCode,
-  HttpStatus,
   Post,
   UseGuards,
   Request,
@@ -23,6 +21,7 @@ export class UserController {
   @Post('/signup')
   async registerUser(@Body() dto: RegisterUserDto): Promise<User> {
     const user = await this.userService.registerUser(dto);
+
     return user;
   }
 

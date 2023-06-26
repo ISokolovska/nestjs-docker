@@ -5,6 +5,10 @@ import {
   Post,
   Param,
   NotFoundException,
+  UseGuards,
+  Request,
+  HttpStatus,
+  Delete,
 } from '@nestjs/common';
 
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -13,43 +17,52 @@ import { ApiOperation } from '@nestjs/swagger';
 import { Task } from './entities/task.entity';
 import { Roles } from '../users/roles/roles.decorator';
 import { Role } from '../users/roles/role.enum';
+import { JwtAuthGuard } from '../users/user.guard';
+import { IServerResponse } from 'src/interfaces/server-responce';
+import { RolesGuard } from '../users/roles/roles.guard';
 
+@UseGuards(JwtAuthGuard)
 @Controller('tasks')
 export class TaskController {
   constructor(private taskService: TaskService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get list of all categories' })
-  async getAllCategories(): Promise<Task[]> {
-    const categories = await this.taskService.getAllTasks();
-    if (categories.length === 0)
-      throw new NotFoundException('There is no any record about categories');
-    return categories;
+  @ApiOperation({ summary: 'Get list of all tasks' })
+  async getAllTasks(@Request() req): Promise<IServerResponse<Task[]>> {
+    const tasks = await this.taskService.getAllTasks(req.user.id);
+
+    return {
+      statusCode: HttpStatus.OK,
+      message: "User's task",
+      data: tasks,
+    };
   }
 
   @Get(':id')
-  @ApiOperation({ summary: 'Get category with special ID' })
+  @ApiOperation({ summary: 'Get task with special ID' })
   async getCategoryById(@Param('id') id: number): Promise<Task> {
-    const category = await this.taskService.getTaskById(id);
-    if (!category)
-      throw new NotFoundException(`Task with id ${id} doesn't exist`);
-    return category;
+    const task = await this.taskService.getTaskById(id);
+    if (!task) throw new NotFoundException(`Task with id ${id} doesn't exist`);
+    return task;
   }
 
   @Post()
+  @UseGuards(RolesGuard)
   @Roles(Role.Admin)
-  @ApiOperation({ summary: 'Add category' })
+  @ApiOperation({ summary: 'Add task' })
   async addTask(@Body() dto: CreateTaskDto): Promise<Task> {
     return this.taskService.addTask(dto);
   }
 
-  //   @Delete(':id')
-  //   @Roles(Role.Admin)
-  //   @ApiOperation({ summary: 'Delete category' })
-  //   async removeCategory(@Param('id') id: number): Promise<Category> {
-  //     const category = await this.categoryService.getCategoryById(id);
-  //     if (!category)
-  //       throw new NotFoundException(`Category with id ${id} doesn't exist`);
-  //     return this.categoryService.removeCategory(id, userId);
-  //   }
+  @Delete(':id')
+  @UseGuards(RolesGuard)
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Delete task' })
+  async removeTask(@Param('id') id: number): Promise<IServerResponse> {
+    await this.taskService.removeTask(id);
+    return {
+      statusCode: HttpStatus.OK,
+      message: `Category with id ${id} was removed`,
+    };
+  }
 }
