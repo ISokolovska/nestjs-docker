@@ -24,6 +24,7 @@ export class UserService {
 
       const user: User = await this.userRepository.create({
         ...dto,
+        role: dto.role ? dto.role : 'user',
         password: hash,
       });
 

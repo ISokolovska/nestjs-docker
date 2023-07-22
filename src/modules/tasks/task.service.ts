@@ -11,10 +11,10 @@ export class TaskService {
     private readonly taskRepository: Repository<Task>,
   ) {}
 
-  async getAllTasks(taskId: number): Promise<Task[]> {
+  async getAllTasks(categoryId: number): Promise<Task[]> {
     return await this.taskRepository
       .createQueryBuilder('task')
-      .where('task.taskId = :taskId', { taskId })
+      .where('task.categoryId = :categoryId', { categoryId })
       .getMany();
   }
 
@@ -28,6 +28,21 @@ export class TaskService {
   async addTask(dto: CreateTaskDto): Promise<Task> {
     const category = this.taskRepository.create(dto);
     return await this.taskRepository.save(category);
+  }
+
+  async updateTaskById(id: number, dto: CreateTaskDto): Promise<Task> {
+    try {
+      const updatedData = await this.taskRepository
+        .createQueryBuilder('task')
+        .update<Task>(Task, { ...dto })
+        .where('task.id = :id', { id: id })
+        .returning('*') // returns all the column values
+        .updateEntity(true)
+        .execute();
+      return updatedData.raw[0];
+    } catch (error) {
+      throw new NotFoundException(`Task with id ${id} doesn't exist`);
+    }
   }
 
   async removeTask(id: number): Promise<void> {

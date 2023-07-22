@@ -9,6 +9,7 @@ import {
   UseGuards,
   Request,
   HttpStatus,
+  Put,
 } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { CategoryService } from './category.service';
@@ -52,6 +53,17 @@ export class CategoryController {
   @ApiOperation({ summary: 'Add category' })
   async addCategory(@Body() dto: CreateCategoryDto): Promise<Category> {
     return this.categoryService.addCategory(dto);
+  }
+
+  @Put(':id')
+  @UseGuards(RolesGuard)
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Update category' })
+  async updateCategoryById(
+    @Param('id') id: number,
+    @Body() dto: CreateCategoryDto,
+  ): Promise<Category> {
+    return this.categoryService.updateCategoryById(id, dto);
   }
 
   @Delete(':id')

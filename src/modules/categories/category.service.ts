@@ -30,6 +30,24 @@ export class CategoryService {
     return await this.categoryRepository.save(category);
   }
 
+  async updateCategoryById(
+    id: number,
+    dto: CreateCategoryDto,
+  ): Promise<Category> {
+    try {
+      const updatedData = await this.categoryRepository
+        .createQueryBuilder('category')
+        .update<Category>(Category, { ...dto })
+        .where('category.id = :id', { id: id })
+        .returning('*') // returns all the column values
+        .updateEntity(true)
+        .execute();
+      return updatedData.raw[0];
+    } catch (error) {
+      throw new NotFoundException(`Category with id ${id} doesn't exist`);
+    }
+  }
+
   async removeCategory(id: number): Promise<void> {
     try {
       const response = await this.categoryRepository

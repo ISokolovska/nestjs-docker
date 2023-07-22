@@ -5,6 +5,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   ManyToOne,
+  JoinColumn,
 } from 'typeorm';
 
 @Entity()
@@ -15,15 +16,19 @@ export class Task {
   @Column({ name: 'name' })
   name: string;
 
-  @CreateDateColumn({ name: 'date-start' })
+  @CreateDateColumn({ name: 'date_start' })
   dateStart: Date;
 
-  @Column({ name: 'date-end' })
+  @CreateDateColumn({ name: 'date_end' })
   dateEnd: Date;
 
-  @Column({ name: 'task-id' })
-  taskId: number;
+  @Column({ name: 'category_id' })
+  categoryId: number;
 
   @ManyToOne(() => Category, (category) => category.id)
+  @JoinColumn({
+    name: 'category_id',
+    referencedColumnName: 'id',
+  })
   categories: Category[];
 }

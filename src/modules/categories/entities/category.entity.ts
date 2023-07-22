@@ -6,8 +6,9 @@ import {
   PrimaryGeneratedColumn,
   OneToMany,
   CreateDateColumn,
-  UpdateDateColumn,
   ManyToOne,
+  JoinColumn,
+  JoinTable,
 } from 'typeorm';
 
 @Entity()
@@ -18,22 +19,19 @@ export class Category {
   @Column({ name: 'name' })
   name: string;
 
-  @CreateDateColumn({ name: 'date-created' })
+  @CreateDateColumn({ name: 'date_created' })
   dateCreated: Date;
 
-  @Column({ name: 'user-id' })
+  @Column({ name: 'user_id' })
   userId: number;
 
-  @OneToMany(() => Task, (task) => task.taskId)
-  tasks: Task;
+  @OneToMany(() => Task, (task) => task.categoryId)
+  tasks: Task[];
 
   @ManyToOne(() => User, (user) => user.id)
-  users: User;
-
-  //   @OneToMany(() => Task, (task) => task.taskId)
-  //   tasks: Task[];
-
-  //   @ManyToOne(() => User, (user) => user.id)
-  //   users: User[];
-  //
+  @JoinColumn({
+    name: 'user_id',
+    referencedColumnName: 'id',
+  })
+  user: User[];
 }

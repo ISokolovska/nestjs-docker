@@ -9,6 +9,7 @@ import {
   Request,
   HttpStatus,
   Delete,
+  Put,
 } from '@nestjs/common';
 
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -52,6 +53,17 @@ export class TaskController {
   @ApiOperation({ summary: 'Add task' })
   async addTask(@Body() dto: CreateTaskDto): Promise<Task> {
     return this.taskService.addTask(dto);
+  }
+
+  @Put(':id')
+  @UseGuards(RolesGuard)
+  @Roles(Role.Admin)
+  @ApiOperation({ summary: 'Update category' })
+  async updateTaskById(
+    @Param('id') id: number,
+    @Body() dto: CreateTaskDto,
+  ): Promise<Task> {
+    return this.taskService.updateTaskById(id, dto);
   }
 
   @Delete(':id')

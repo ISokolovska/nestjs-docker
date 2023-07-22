@@ -16,6 +16,5 @@ export class CreateTaskDto {
   dateEnd?: Date;
 
   @IsNotEmpty()
-  taskId: number;
+  categoryId: number;
 }
-

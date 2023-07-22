@@ -1,10 +1,5 @@
-// export interface CategoryInterface {
-//   id?: string;
-//   name?: string;
-//   dateCreated: Date;
-//   userId: number;
-// }
-
-// export interface IId {
+// export interface IUpdateResult {
 //   id: number;
+//   name: string;
+//   dateCreated: Date;
 // }
