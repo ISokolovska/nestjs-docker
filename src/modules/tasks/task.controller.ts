@@ -49,7 +49,7 @@ export class TaskController {
 
   @Post()
   @UseGuards(RolesGuard)
-  @Roles(Role.Admin)
+  @Roles(Role.User)
   @ApiOperation({ summary: 'Add task' })
   async addTask(@Body() dto: CreateTaskDto): Promise<Task> {
     return this.taskService.addTask(dto);
@@ -57,7 +57,7 @@ export class TaskController {
 
   @Put(':id')
   @UseGuards(RolesGuard)
-  @Roles(Role.Admin)
+  @Roles(Role.User)
   @ApiOperation({ summary: 'Update category' })
   async updateTaskById(
     @Param('id') id: number,
@@ -68,7 +68,7 @@ export class TaskController {
 
   @Delete(':id')
   @UseGuards(RolesGuard)
-  @Roles(Role.Admin)
+  @Roles(Role.User)
   @ApiOperation({ summary: 'Delete task' })
   async removeTask(@Param('id') id: number): Promise<IServerResponse> {
     await this.taskService.removeTask(id);

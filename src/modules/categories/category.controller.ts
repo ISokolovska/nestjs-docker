@@ -38,7 +38,7 @@ export class CategoryController {
     };
   }
 
-  @Get(':id')
+  @Get('/:id')
   @ApiOperation({ summary: 'Get category with special ID' })
   async getCategoryById(@Param('id') id: number): Promise<Category> {
     const category = await this.categoryService.getCategoryById(id);
@@ -49,15 +49,15 @@ export class CategoryController {
 
   @Post()
   @UseGuards(RolesGuard)
-  @Roles(Role.Admin)
+  @Roles(Role.User)
   @ApiOperation({ summary: 'Add category' })
   async addCategory(@Body() dto: CreateCategoryDto): Promise<Category> {
     return this.categoryService.addCategory(dto);
   }
 
-  @Put(':id')
+  @Put('/:id')
   @UseGuards(RolesGuard)
-  @Roles(Role.Admin)
+  @Roles(Role.User)
   @ApiOperation({ summary: 'Update category' })
   async updateCategoryById(
     @Param('id') id: number,
@@ -66,9 +66,9 @@ export class CategoryController {
     return this.categoryService.updateCategoryById(id, dto);
   }
 
-  @Delete(':id')
+  @Delete('/:id')
   @UseGuards(RolesGuard)
-  @Roles(Role.Admin)
+  @Roles(Role.User)
   @ApiOperation({ summary: 'Delete category' })
   async removeCategory(@Param('id') id: number): Promise<IServerResponse> {
     await this.categoryService.removeCategory(id);

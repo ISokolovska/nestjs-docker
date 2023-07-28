@@ -6,7 +6,11 @@ import { RegisterUserDto } from './dto/create-user.dto';
 import * as argon from 'argon2';
 import { LoginUserDto } from './dto/login-user.dto';
 import { JwtService } from '@nestjs/jwt';
-import { ILoginResponse } from './interfaces/user.interface';
+import {
+  ILoginResponse,
+  IUser,
+  IUserPayload,
+} from './interfaces/user.interface';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -62,5 +66,19 @@ export class UserService {
     });
 
     return { token };
+  }
+
+  async getProfile(id: number): Promise<IUser> {
+    const user = await this.userRepository.findOne({
+      where: { id },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+
+    const { password, ...result } = user;
+
+    return result;
   }
 }

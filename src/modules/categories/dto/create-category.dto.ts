@@ -1,17 +1,15 @@
-import { IsDate, IsNotEmpty, IsString } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsNotEmpty, IsString } from 'class-validator';
+
 export class CreateCategoryDto {
   @IsString()
   @IsNotEmpty()
   name: string;
 
- 
-  @Type(() => Date)
-  @IsDate()
+  // @Type(() => Date)
+  // @IsDate()
   @IsNotEmpty()
-  dateCreated: Date;
+  dateCreated: string;
 
   @IsNotEmpty()
   userId: number;
-  
 }

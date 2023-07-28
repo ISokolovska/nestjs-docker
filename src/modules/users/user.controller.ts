@@ -7,7 +7,7 @@ import {
   Request,
   HttpStatus,
 } from '@nestjs/common';
-import { ILoginResponse } from './interfaces/user.interface';
+import { ILoginResponse, IUser } from './interfaces/user.interface';
 
 import { RegisterUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
@@ -47,12 +47,15 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Get('/profile')
-  async getProfile(@Request() req): Promise<IServerResponse<any>> {
-    ApiRequestTimeoutResponse;
+  async getProfile(@Request() req): Promise<IServerResponse<IUser>> {
+    // ApiRequestTimeoutResponse;
+
+    const user = await this.userService.getProfile(req.user.userId);
+
     return {
       statusCode: HttpStatus.OK,
       message: "User's categories",
-      data: req.user,
+      data: user,
     };
   }
 }

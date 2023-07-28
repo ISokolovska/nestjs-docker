@@ -8,7 +8,6 @@ import {
   CreateDateColumn,
   ManyToOne,
   JoinColumn,
-  JoinTable,
 } from 'typeorm';
 
 @Entity()
@@ -20,7 +19,7 @@ export class Category {
   name: string;
 
   @CreateDateColumn({ name: 'date_created' })
-  dateCreated: Date;
+  dateCreated: string;
 
   @Column({ name: 'user_id' })
   userId: number;
