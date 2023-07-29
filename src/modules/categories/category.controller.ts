@@ -29,7 +29,9 @@ export class CategoryController {
   @Get()
   @ApiOperation({ summary: 'Get list of all categories' })
   async getAllCategories(@Request() req): Promise<IServerResponse<Category[]>> {
-    const categories = await this.categoryService.getAllCategories(req.user.id);
+    const categories = await this.categoryService.getAllCategories(
+      req.user.userId,
+    );
 
     return {
       statusCode: HttpStatus.OK,
@@ -51,8 +53,11 @@ export class CategoryController {
   @UseGuards(RolesGuard)
   @Roles(Role.User)
   @ApiOperation({ summary: 'Add category' })
-  async addCategory(@Body() dto: CreateCategoryDto): Promise<Category> {
-    return this.categoryService.addCategory(dto);
+  async addCategory(
+    @Body() dto: CreateCategoryDto,
+    @Request() req,
+  ): Promise<Category> {
+    return this.categoryService.addCategory(dto, req.user.userId);
   }
 
   @Put('/:id')

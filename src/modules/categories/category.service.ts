@@ -25,8 +25,9 @@ export class CategoryService {
       .getOne();
   }
 
-  async addCategory(dto: CreateCategoryDto): Promise<Category> {
-    const category = this.categoryRepository.create(dto);
+  async addCategory(dto: CreateCategoryDto, userId: number): Promise<Category> {
+    const newCategory = { name: dto.name, userId };
+    const category = this.categoryRepository.create(newCategory);
     return await this.categoryRepository.save(category);
   }
 

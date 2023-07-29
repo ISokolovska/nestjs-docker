@@ -18,8 +18,8 @@ export class Category {
   @Column({ name: 'name' })
   name: string;
 
-  @CreateDateColumn({ name: 'date_created' })
-  dateCreated: string;
+  @CreateDateColumn({ name: 'date_created', type: 'timestamptz' })
+  dateCreated: Date;
 
   @Column({ name: 'user_id' })
   userId: number;
