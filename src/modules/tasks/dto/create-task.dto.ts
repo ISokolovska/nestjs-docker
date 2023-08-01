@@ -5,6 +5,10 @@ export class CreateTaskDto {
   @IsNotEmpty()
   name: string;
 
+  @IsString()
+  // @IsNotEmpty()
+  description: string;
+
   @Type(() => Date)
   @IsDate()
   @IsNotEmpty()

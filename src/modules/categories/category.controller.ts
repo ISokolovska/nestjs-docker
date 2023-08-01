@@ -10,6 +10,7 @@ import {
   Request,
   HttpStatus,
   Put,
+  Patch,
 } from '@nestjs/common';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { CategoryService } from './category.service';
@@ -60,7 +61,7 @@ export class CategoryController {
     return this.categoryService.addCategory(dto, req.user.userId);
   }
 
-  @Put('/:id')
+  @Patch('/:id')
   @UseGuards(RolesGuard)
   @Roles(Role.User)
   @ApiOperation({ summary: 'Update category' })

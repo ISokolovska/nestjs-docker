@@ -15,6 +15,7 @@ export class CategoryService {
     return await this.categoryRepository
       .createQueryBuilder('category')
       .where('category.userId = :userId', { userId })
+      .orderBy('category.name')
       .getMany();
   }
 
