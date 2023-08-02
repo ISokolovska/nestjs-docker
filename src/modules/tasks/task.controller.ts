@@ -10,6 +10,7 @@ import {
   HttpStatus,
   Delete,
   Put,
+  Patch,
 } from '@nestjs/common';
 
 import { CreateTaskDto } from './dto/create-task.dto';
@@ -55,10 +56,10 @@ export class TaskController {
     return this.taskService.addTask(dto);
   }
 
-  @Put(':id')
+  @Patch(':id')
   @UseGuards(RolesGuard)
   @Roles(Role.User)
-  @ApiOperation({ summary: 'Update category' })
+  @ApiOperation({ summary: 'Update task' })
   async updateTaskById(
     @Param('id') id: number,
     @Body() dto: CreateTaskDto,

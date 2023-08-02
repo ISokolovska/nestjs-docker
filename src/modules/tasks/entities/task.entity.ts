@@ -16,7 +16,7 @@ export class Task {
   @Column({ name: 'name' })
   name: string;
 
-  @Column({ name: 'description' })
+  @Column({ name: 'description', nullable: true })
   description: string;
 
   @CreateDateColumn({ name: 'date_start' })
