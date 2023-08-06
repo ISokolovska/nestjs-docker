@@ -28,10 +28,10 @@ import { RolesGuard } from '../users/roles/roles.guard';
 export class TaskController {
   constructor(private taskService: TaskService) {}
 
-  @Get()
+  @Get(':id')
   @ApiOperation({ summary: 'Get list of all tasks' })
-  async getAllTasks(@Request() req): Promise<IServerResponse<Task[]>> {
-    const tasks = await this.taskService.getAllTasks(req.user.id);
+  async getAllTasks(@Param('id') id: number): Promise<IServerResponse<Task[]>> {
+    const tasks = await this.taskService.getAllTasks(id);
 
     return {
       statusCode: HttpStatus.OK,
@@ -40,7 +40,7 @@ export class TaskController {
     };
   }
 
-  @Get(':id')
+  @Get('get-task/:id')
   @ApiOperation({ summary: 'Get task with special ID' })
   async getCategoryById(@Param('id') id: number): Promise<Task> {
     const task = await this.taskService.getTaskById(id);
